@@ -65,6 +65,7 @@ app.post('/api/media', limiter, async (req, res) => {
             formats
         });
     } catch (error) {
+        console.error("YTDLP ASLI ERROR ----> :", error.message || error);
         res.status(500).json({ error: 'Private ya Invalid content hai.' });
     }
 });
