@@ -10,9 +10,20 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const cookiePath = fs.existsSync('/etc/secrets/cookies.txt') 
-    ? '/etc/secrets/cookies.txt' 
-    : 'cookies.txt';
+// YEH NAYA JAADUI CODE: Read-Only ko bypass karne ke liye
+let cookiePath = 'cookies.txt'; // Default: Local PC ke liye
+
+try {
+    // Check karega ki kya yeh Render par chal raha hai
+    if (fs.existsSync('/etc/secrets/cookies.txt')) {
+        // Read-Only file ko Writable folder (/tmp/) mein copy kar dega
+        fs.copyFileSync('/etc/secrets/cookies.txt', '/tmp/cookies.txt');
+        cookiePath = '/tmp/cookies.txt'; // Ab yt-dlp is nai writable file ko use karega
+        console.log('✅ Cookies file successfully copied to writable temp folder!');
+    }
+} catch (err) {
+    console.error('Cookie copy karne mein error aayi:', err);
+}
 
 app.use(cors());
 app.use(express.json());
@@ -44,7 +55,7 @@ app.post('/api/media', limiter, async (req, res) => {
             noCheckCertificates: true,
             noWarnings: true,
             preferFreeFormats: true,
-            cookies: cookiePath // Local pe cookies file honi chahiye
+            cookies: cookiePath // Update kiya hua path
         });
 
         const formats = output.formats
@@ -82,7 +93,7 @@ app.get('/api/download', (req, res) => {
         format: format_id,
         output: '-',
         noCheckCertificates: true,
-        cookies: cookiePath
+        cookies: cookiePath // Update kiya hua path
     });
 
     subprocess.stdout.pipe(res);
