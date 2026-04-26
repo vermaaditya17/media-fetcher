@@ -4,10 +4,15 @@ import rateLimit from 'express-rate-limit';
 import youtubedl from 'youtube-dl-exec';
 const { exec } = youtubedl;
 import dotenv from 'dotenv';
+import fs from 'fs'; 
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+const cookiePath = fs.existsSync('/etc/secrets/cookies.txt') 
+    ? '/etc/secrets/cookies.txt' 
+    : 'cookies.txt';
 
 app.use(cors());
 app.use(express.json());
@@ -39,7 +44,7 @@ app.post('/api/media', limiter, async (req, res) => {
             noCheckCertificates: true,
             noWarnings: true,
             preferFreeFormats: true,
-            cookies: 'cookies.txt' // Local pe cookies file honi chahiye
+            cookies: cookiePath // Local pe cookies file honi chahiye
         });
 
         const formats = output.formats
@@ -76,7 +81,7 @@ app.get('/api/download', (req, res) => {
         format: format_id,
         output: '-',
         noCheckCertificates: true,
-        cookies: 'cookies.txt'
+        cookies: cookiePath
     });
 
     subprocess.stdout.pipe(res);
