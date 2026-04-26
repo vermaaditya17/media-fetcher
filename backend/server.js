@@ -55,7 +55,8 @@ app.post('/api/media', limiter, async (req, res) => {
             noCheckCertificates: true,
             noWarnings: true,
             preferFreeFormats: true,
-            cookies: cookiePath // Update kiya hua path
+            cookies: cookiePath ,
+            extractorArgs: 'youtube:player_client=android'
         });
 
         const formats = output.formats
@@ -93,7 +94,8 @@ app.get('/api/download', (req, res) => {
         format: format_id,
         output: '-',
         noCheckCertificates: true,
-        cookies: cookiePath // Update kiya hua path
+        cookies: cookiePath, // Update kiya hua path
+        extractorArgs: 'youtube:player_client=android'
     });
 
     subprocess.stdout.pipe(res);
