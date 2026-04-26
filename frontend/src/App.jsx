@@ -33,7 +33,7 @@ export default function App() {
     setData(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/media', {
+      const response = await fetch('https://media-fetcher-48t3.onrender.com/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
@@ -150,7 +150,7 @@ export default function App() {
                         
                         {/* 🚨 THE FIX: Direct Stream Download Link */}
                         <a
-                          href={`http://localhost:5000/api/download?url=${encodeURIComponent(url)}&format_id=${format.format_id}&ext=${format.ext}&title=${encodeURIComponent(data.title)}`}
+                       href={`https://media-fetcher-48t3.onrender.com/api/download?url=${encodeURIComponent(url)}&format_id=${format.format_id}&ext=${format.ext}&title=${encodeURIComponent(data.title)}`}
                           className="flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-semibold hover:opacity-90 transition w-full sm:w-auto justify-center"
                         >
                           <Download size={16} /> Fast Download
